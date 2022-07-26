@@ -1,4 +1,6 @@
 import os
+
+from numpy import append
 from tools import *
 from pdf2image import convert_from_path
 
@@ -75,13 +77,52 @@ def zoneInteressanteTemplate(nomexam,zones):
 
 def main():
     # Découpe des zones (à n'exécuter que la première fois)
-    zoneInteressanteTemplate(EXAM_COURANT,ZONES_COURANTES)
-    for i in [1,2,3]:
-           zoneInteressanteEleve(i,"examadn",ZONES_COURANTES)
-    effaceFichiers('Temp')
+    # zoneInteressanteTemplate(EXAM_COURANT,ZONES_COURANTES)
+    # for i in [1,2,3]:
+    #        zoneInteressanteEleve(i,"examadn",ZONES_COURANTES)
+    #effaceFichiers('Temp')
     #parcoursReponses(1,6,1,surligneCasesDetectees)
-    parcoursReponses(1,2,3,surligneCasesDetectees)
-    
+    #parcoursReponses(1,2,3,surligneCasesDetectees)
+    interpretationQCM(2,3)
+
+
+
+
+
+
+def interpretationQCM(nbReponses,nbEleves):
+    #On récupère le template des réponses pour chaque question
+    template_rep = []
+    for i in range(1,nbReponses+1):
+        chem_reponse = "resource/"+EXAM_COURANT+"/references/reponse_q"+str(i)+".png"
+        cases_template,imgs_template = trouveCases(chem_reponse)
+        for j in range(1,nbEleves+1):
+            chem_reponse = "resource/"+EXAM_COURANT+"/reponses_eleve_"+str(j)+"/reponse_q"+str(i)+".png"
+            img_rep_eleve = cv.imread(chem_reponse)
+            img_rep_eleve = drawRectangle(img_rep_eleve,cases_template,(255,0,0))
+            cases_remplies,cases_vides = [],[]
+            for k,case in enumerate(cases_template):
+                img_case_eleve = cv.cvtColor(decoupe(img_rep_eleve,getPosition(case),getDimensions(case)),cv.COLOR_BGR2GRAY)
+                diff =  diffCouleurAvecCaseBlanche(img_case_eleve,imgs_template[k]) #distanceAvecCaseBlanche(img_case_eleve,imgs_template[k])
+                if(diff>DIFFERENCES_AVEC_CASE_BLANCHE):cases_remplies.append(case)
+                else :cases_vides.append(case)
+            img_rep_eleve = drawRectangle(img_rep_eleve,cases_remplies,(0,255,0))
+            img_rep_eleve = drawRectangle(img_rep_eleve,cases_vides,(0,0,255))
+            cv.imwrite("Temp/detection_eleve_"+str(j)+"_q_"+str(i)+".png",img_rep_eleve)
+            
+
+        
+
+
+
+
+
+
+
+
+
+
+
 def detecteCasesSurImage(chem_img):
     cases,imgs = trouveCases(chem_img)
     img_src = cv.imread(chem_img)

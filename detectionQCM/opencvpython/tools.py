@@ -1,6 +1,4 @@
-from dis import dis
 import functools
-import string
 from xmlrpc.client import Boolean
 import cv2 as cv
 import numpy as np
@@ -148,7 +146,6 @@ def faitDoublon(indice,formes)->Boolean:
             return True
     return False
 
-# Forme indique le format que l'on souhaite avoir : des formes ou des images des carrés
 def trouveCases(chemin_copie):
     img_src = cv.imread(chemin_copie)
     #Coloration de l'image en gris
@@ -214,11 +211,11 @@ def interpretationCaseAvecCaseBlanche(img_case,chemin_vide):
     img_vide = img_vide [0] 
     cv.imwrite('Temp/vide.png',img_vide)
     # Plusieurs types de 
-    cmp1= comparaisonAvecCaseBlanche(img_case,img_vide)
+    cmp1= distanceAvecCaseBlanche(img_case,img_vide)
     #cmp2 = abs(couleurMoyenneImage(img_case)[0] - couleurMoyenneImage(img_vide)[0])/255
     return cmp1>DIFFERENCES_AVEC_CASE_BLANCHE
 
-def comparaisonAvecCaseBlanche(img_case,img_vide):
+def distanceAvecCaseBlanche(img_case,img_vide):
     if img_case.shape != img_vide.shape:
         [img_vide,img_case] = uniformise([img_vide,img_case])
     h,w = img_vide.shape
@@ -228,4 +225,7 @@ def comparaisonAvecCaseBlanche(img_case,img_vide):
     # Cependant, le fait est que plus ce nombre est élevé, plus il y a de différence 
     similarity =  errorL2 / ( w * h )
     return similarity
-    
+
+def diffCouleurAvecCaseBlanche(img_case,img_vide):
+    return abs(couleurMoyenneImage(img_case)[0] - couleurMoyenneImage(img_vide)[0])/255
+
