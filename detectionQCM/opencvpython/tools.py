@@ -1,3 +1,4 @@
+from dis import dis
 import functools
 import string
 from xmlrpc.client import Boolean
@@ -104,11 +105,12 @@ def interpretationForme(contour):
 
 def detectFormes(img,nomsFormes = []):
     _,thrash = cv.threshold(img,240,255,cv.THRESH_BINARY)
-    contours, _ = cv.findContours(thrash,cv.RETR_TREE,cv.CHAIN_APPROX_NONE)
+    contours, hierarchy = cv.findContours(thrash,cv.RETR_TREE,cv.CHAIN_APPROX_NONE)
     formes = []
     for contour in contours:
         nom,forme = interpretationForme(contour)
         if nom in nomsFormes:
+           # affiche(img,forme=forme)
             formes.append(forme)
     #Tri des formes pour que l'ordre des cases détecté soit intuitif
     formes.sort(key=functools.cmp_to_key(__comparePosition))
@@ -151,7 +153,7 @@ def trouveCases(chemin_copie):
     img_src = cv.imread(chemin_copie)
     #Coloration de l'image en gris
     img = cv.cvtColor(img_src,cv.COLOR_BGR2GRAY)
-    formes_cases = detectFormes(img,["CARRE"])
+    formes_cases = detectFormes(img,["CARRE","RECTANGLE"])
     cases = []
     img_cases = []
     # Enregistrement des cases de l'image (tous les carrés détectés)
@@ -180,6 +182,12 @@ def couleurMoyenneImage(img):
         avg = (avg,avg,avg)
     return avg
 
+#Même fonctionnement que pour la moyenne
+def couleurMedianeImage(img):
+    med_color_row = np.median(img, axis=0)
+    med = np.average(med_color_row, axis=0)
+    if med.size == 1:med = (med,med,med)
+    return med
 def creationCarre(w,h,couleur=(0,0,0),alpha=0.4):
     coul_img = np.ones((w,h,3), dtype=np.uint8)
     cv.rectangle(coul_img, (0, 0), (h, w), (255,255,255), -1)
@@ -188,30 +196,36 @@ def creationCarre(w,h,couleur=(0,0,0),alpha=0.4):
     return coul_img
 
 # Interprète les cases en les classant comme vides ou remplies
-def interpretationCourante(img_cases,formes_cases):
+def interpretationsCasesAvecCaseBlanche(img_cases,formes_cases,chem_carre_blanc):
     cases_cochees = []
     cases_vides = []
     for i,img_case in enumerate(img_cases):
-        if interpretationCaseTemplate(img_case,"resource/references/carre_blanc.png"): 
+        if interpretationCaseAvecCaseBlanche(img_case,chem_carre_blanc): 
             cases_cochees.append(formes_cases[i])
-        else :cases_vides.append(formes_cases[i])
+        else :
+            cases_vides.append(formes_cases[i])
     return cases_cochees,cases_vides
 
-def interpretationCaseTemplate(img_case,chemin_template):
-    case_template,img_template = trouveCases(chemin_template)
+# Renvoie un booléen qui indique si la case est détectée comme cochée
+def interpretationCaseAvecCaseBlanche(img_case,chemin_vide):
+    case_vide,img_vide = trouveCases(chemin_vide)
     #On ne prend que le premier carré qui a été détecté
-    case_template = case_template[0]
-    img_template = img_template [0] 
-    return comparaisonCaseTemplate(img_case,img_template)>0.2
+    case_vide = case_vide[0]
+    img_vide = img_vide [0] 
+    cv.imwrite('Temp/vide.png',img_vide)
+    # Plusieurs types de 
+    cmp1= comparaisonAvecCaseBlanche(img_case,img_vide)
+    #cmp2 = abs(couleurMoyenneImage(img_case)[0] - couleurMoyenneImage(img_vide)[0])/255
+    return cmp1>DIFFERENCES_AVEC_CASE_BLANCHE
 
-# Template est une case qui a été désignée comme case vide
-def comparaisonCaseTemplate(img_case,img_template):
-    if img_case.shape != img_template.shape:
-        [img_template,img_case] = uniformise([img_template,img_case])
-    h,w = img_template.shape
+def comparaisonAvecCaseBlanche(img_case,img_vide):
+    if img_case.shape != img_vide.shape:
+        [img_vide,img_case] = uniformise([img_vide,img_case])
+    h,w = img_vide.shape
     # https://www.delftstack.com/howto/python/opencv-compare-images/
-    errorL2 = cv.norm( img_case, img_template, cv.NORM_L2 )
+    errorL2 = cv.norm( img_case, img_vide, cv.NORM_L2 )
     # Il y a étrangement plus d'erreurs que de pixels.. Je ne sais pas pourquoi
     # Cependant, le fait est que plus ce nombre est élevé, plus il y a de différence 
     similarity =  errorL2 / ( w * h )
     return similarity
+    

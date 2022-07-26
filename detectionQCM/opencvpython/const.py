@@ -1,4 +1,7 @@
 #Detection de formes
 MIN_WIDTH_SHAPE = 15
 MIN_HEIGHT_SHAPE = 15
-EPSILON = 0.01
+EPSILON = 0.03
+
+#Interprétation
+DIFFERENCES_AVEC_CASE_BLANCHE = 0.2
