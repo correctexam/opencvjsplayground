@@ -1,4 +1,10 @@
 # Outil de détection des cases cochées sur Python
+## Aperçu
+Les résultats peuvent être sous forme d'images ou de JSON.
+Sur l'image, le chiffre en bleu est l'analyse du taux de remplissage de la case. Si celui-ci dépasse un certain seuil, alors la case est considérée comme cochée.
+<img src="https://user-images.githubusercontent.com/62034725/181284736-6b8de2cf-a5ca-4355-82c7-30976568c851.png" alt="detection_eleve_q1" height="400" />
+<img src="https://user-images.githubusercontent.com/62034725/181285381-ffa3b0f4-60c3-4d0b-8193-f1e574b795fc.png" alt="detection_eleve_q2" height="400" />
+
 ## Librairies à installer
 - Librairies dédiées à la découpe de l'examen en images calibrées
   - ghostscript
