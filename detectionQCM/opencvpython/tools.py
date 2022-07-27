@@ -1,5 +1,4 @@
 import functools
-from xmlrpc.client import Boolean
 import cv2 as cv
 import numpy as np
 from const import *
@@ -139,13 +138,14 @@ def __f2Inf1(f1,f2):
 
 
 # Indique si une forme est en intersection avec une autre et est moins intéressante 
-def faitDoublon(indice,formes)->Boolean:
+def faitDoublon(indice,formes)->bool:
     f = formes[indice]
     for i,f_ in enumerate(formes):
       if  indice<i and intersection(f,f_):
             return True
     return False
 
+# Trouve les cases qui composent l'image désignée par le chemin
 def trouveCases(chemin_copie):
     img_src = cv.imread(chemin_copie)
     #Coloration de l'image en gris
@@ -185,6 +185,7 @@ def couleurMedianeImage(img):
     med = np.average(med_color_row, axis=0)
     if med.size == 1:med = (med,med,med)
     return med
+
 def creationCarre(w,h,couleur=(0,0,0),alpha=0.4):
     coul_img = np.ones((w,h,3), dtype=np.uint8)
     cv.rectangle(coul_img, (0, 0), (h, w), (255,255,255), -1)
@@ -192,40 +193,7 @@ def creationCarre(w,h,couleur=(0,0,0),alpha=0.4):
     coul_img = cv.addWeighted(transp,alpha,coul_img,1-alpha,0)
     return coul_img
 
-# Interprète les cases en les classant comme vides ou remplies
-def interpretationsCasesAvecCaseBlanche(img_cases,formes_cases,chem_carre_blanc):
-    cases_cochees = []
-    cases_vides = []
-    for i,img_case in enumerate(img_cases):
-        if interpretationCaseAvecCaseBlanche(img_case,chem_carre_blanc): 
-            cases_cochees.append(formes_cases[i])
-        else :
-            cases_vides.append(formes_cases[i])
-    return cases_cochees,cases_vides
-
-# Renvoie un booléen qui indique si la case est détectée comme cochée
-def interpretationCaseAvecCaseBlanche(img_case,chemin_vide):
-    case_vide,img_vide = trouveCases(chemin_vide)
-    #On ne prend que le premier carré qui a été détecté
-    case_vide = case_vide[0]
-    img_vide = img_vide [0] 
-    cv.imwrite('Temp/vide.png',img_vide)
-    # Plusieurs types de 
-    cmp1= distanceAvecCaseBlanche(img_case,img_vide)
-    #cmp2 = abs(couleurMoyenneImage(img_case)[0] - couleurMoyenneImage(img_vide)[0])/255
-    return cmp1>DIFFERENCES_AVEC_CASE_BLANCHE
-
-def distanceAvecCaseBlanche(img_case,img_vide):
-    if img_case.shape != img_vide.shape:
-        [img_vide,img_case] = uniformise([img_vide,img_case])
-    h,w = img_vide.shape
-    # https://www.delftstack.com/howto/python/opencv-compare-images/
-    errorL2 = cv.norm( img_case, img_vide, cv.NORM_L2 )
-    # Il y a étrangement plus d'erreurs que de pixels.. Je ne sais pas pourquoi
-    # Cependant, le fait est que plus ce nombre est élevé, plus il y a de différence 
-    similarity =  errorL2 / ( w * h )
-    return similarity
-
+# Renvoie un pourcentage de différences entre une image de case et une considérée comme vide
 def diffCouleurAvecCaseBlanche(img_case,img_vide):
     return abs(couleurMoyenneImage(img_case)[0] - couleurMoyenneImage(img_vide)[0])/255
 
