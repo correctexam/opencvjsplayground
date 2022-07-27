@@ -1,4 +1,5 @@
-detectionQCM/opencvpython/__pycache__/calibration.cpython-310.pyc
-detectionQCM/opencvpython/__pycache__/const.cpython-310.pyc
-detectionQCM/opencvpython/__pycache__/systeme.cpython-310.pyc
-detectionQCM/opencvpython/__pycache__/tools.cpython-310.pyc
+detectionQCM/opencvpython/__pycache__/*
+detectionQCM/opencvpython/resource/un_exam/copies/conversion_png/*
+detectionQCM/opencvpython/resource/un_exam/references/*
+detectionQCM/opencvpython/resource/un_exam/reponses_eleve_*
+detectionQCM/opencvpython/Temp/*
