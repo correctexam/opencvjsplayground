@@ -63,7 +63,7 @@ Suivre la procédure qui suit.
 6. Commenter tous les appels de fonctions, sauf celui de *premiereFois()*. **Exécuter**
 7. Ouvrir l'image *Temp/info_zones.png*. Et repérer les coordonnées *(x_min,y_min)* des différentes zones de questions à analyser
 8. Revenir au fichier *const.py*
-9. Modifier la variable **ZONES_COURANTES** en renseignant dans le tableau de tuples pour chaque zone le tuple suivant : *((x_min,y_min)(largeur,hauteur))*. Diminuer les valeurs (x_min,y_min) d'au moins 50 et prendre plusieurs centaines de pixels pour *largeur* et *hauteur*.
+9. Modifier la variable **ZONES_COURANTES** en renseignant dans le tableau de tuples pour chaque zone le tuple suivant : *((x_min,y_min)(largeur,hauteur))*. Diminuer les valeurs *(x_min,y_min)* d'au moins 50 et prendre plusieurs centaines de pixels pour *largeur* et *hauteur*.
 10. Revenir au fichier *main.py*, dans *main()*
 11. Commenter l'appel à *premiereFois()* et décommenter *calibrer()*. **Exécuter**
 12. Vérifier que les fichiers *reponse_qX.png* contiennent chacun la zone de réponse (en noir et blanc). Revenir au point 9. si ce n'est pas le cas
