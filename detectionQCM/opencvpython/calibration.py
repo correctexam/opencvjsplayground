@@ -1,9 +1,8 @@
 from systeme import *
 import cv2 as cv
 from tools import affiche, decoupe, getPosition,trouveCases 
+from const import NB_ELEVES,ZONES_COURANTES
 
-ZONES_COURANTES= [((350,2200),(800,650)),((350,2850),(800,800))]
-NB_ELEVES = 3
 
 # Efface les fichiers produits pour la calibration
 def reinitialisationCalibration(nomexam):
@@ -16,7 +15,7 @@ def reinitialisationCalibration(nomexam):
 def calibrer(nomexam):
     zoneInteressanteTemplate(nomexam,ZONES_COURANTES)
     for i in range(1,NB_ELEVES+1):
-           zoneInteressanteEleve(i,"examadn",ZONES_COURANTES)
+           zoneInteressanteEleve(i,nomexam,ZONES_COURANTES)
 
 # Stocke chaque zone de la copie comme étant une réponse
 def zoneInteressante(chem_copie,dossier_res,zones):

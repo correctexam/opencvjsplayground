@@ -1,3 +1,8 @@
+#Installation/Settup
+EXAM_COURANT="un_exam" 
+NB_QUESTIONS=2
+NB_ELEVES = 3
+ZONES_COURANTES= [((350,2200),(800,650)),((350,2850),(800,800))]
 #Detection de formes
 MIN_WIDTH_SHAPE = 15
 MIN_HEIGHT_SHAPE = 15

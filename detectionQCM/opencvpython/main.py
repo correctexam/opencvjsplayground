@@ -1,27 +1,34 @@
-from systeme import effaceFichiers
+from systeme import effaceAnalyse, effaceFichiers, structureAnalyse
 from tools import *
-from calibration import calibrer,detectionZones, reinitialisationCalibration
+from calibration import NB_ELEVES, calibrer,detectionZones, reinitialisationCalibration
 
-# Noms d'exam :
-# premierexam
-# examadn
-EXAM_COURANT="examadn" #"premierexam"
+def reinitStructureAnalyse():
+    # Phase de création des dossiers nécessaires à l'analyse
+    effaceAnalyse(EXAM_COURANT,NB_ELEVES) # Supprime tous les dossiers qui vont être créés (pour éviter les conflits)
+    structureAnalyse(EXAM_COURANT,NB_ELEVES) # Crée tous les dossiers nécessaires à l'analyse
+    # ## Phase de suppression des fichiers générés automatiquement
+    reinitialisationCalibration(EXAM_COURANT)
+
+# Structure le projet et permet d'indiquer les zones relatives aux questions
+def premiereFois():
+    reinitStructureAnalyse()
+    # # Lors de l'ajout d'un nouvel examen, il faut indiquer les zones de calibration :
+    detectionZones(EXAM_COURANT)
 
 
 def main():
     ## Les fonctions sont à commenter / décommenter suivant ce que l'avancement dans l'analyse
-    ## Phase de suppression des fichiers générés automatiquement
-    #effaceFichiers('Temp')
-    #reinitialisationCalibration(EXAM_COURANT)
-    # Lors de l'ajout d'un nouvel examen, il faut indiquer les zones de calibration :
-    detectionZones(EXAM_COURANT)
-    # Phase de calibration
+    premiereFois()
+    # # Phase de calibration : les zones par question sont découpées dans le template et les copies d'élèves 
     #calibrer(EXAM_COURANT)
-    # Phase d'analyse
-    interpretationQCM(2,3)
+    # # Phase d'analyse
+    #interpretationQCM(NB_QUESTIONS,NB_ELEVES)
+    # # Suppression de tous les nouveaux dossiers et fichiers
+    #reinitStructureAnalyse()
 
 # Interprète les cases du QCM courant comme étant cochées ou vides
 def interpretationQCM(nbReponses,nbEleves):
+    effaceFichiers('Temp') #Suppression des fichiers d'analyse déjà produits
     for i in range(1,nbReponses+1):
         chem_reponse = "resource/"+EXAM_COURANT+"/references/reponse_q"+str(i)+".png"
         cases_template,imgs_template = trouveCases(chem_reponse)
