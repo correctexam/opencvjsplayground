@@ -47,7 +47,7 @@ def interpretationQCM(nbReponses,nbEleves):
                     infos_cases[k]={"verdict" :True,"prediction" : diff}
                     cases_remplies.append(case)
                 else :
-                    infos_cases[k]=False
+                    infos_cases[k]={"verdict" :False,"prediction" : diff}
                     cases_vides.append(case)
                 img_rep_eleve = cv.putText(img_rep_eleve,str("%.5f" % (diff)),(getPosition(case)[0],getPosition(case)[1]-15),cv.FONT_HERSHEY_COMPLEX,1,(255,0,0),2)
             tab_analyse[j-1]=infos_cases
