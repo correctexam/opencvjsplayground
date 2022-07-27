@@ -69,6 +69,6 @@ Suivre la procédure qui suit.
 12. Vérifier que les fichiers *reponse_qX.png* contiennent chacun la zone de réponse (en noir et blanc). Revenir au point 9. si ce n'est pas le cas
 13. Revenir au fichier *main.py*, dans *main()*
 14. Commenter l'appel à *calibrer()* et décommenter *interpretationQCM(NB_QUESTIONS,NB_ELEVES)*. **Exécuter**
-15. Le résultat de l'analyse se trouve dans le dossier *Temp* avec les fichiers *detection_eleve_X_q_Y.png*
+15. Le résultat de l'analyse se trouve dans le dossier *Temp* avec les fichiers *detection_eleve_X_q_Y.png* (pour l'aperçu graphique) et dans le fichier *analyse.json* (pour les informations brutes)
 16. Sauvegarder les fichiers produits dans un dossier externe.
 17. Commenter *interpretationQCM(NB_QUESTIONS,NB_ELEVES)* et décommenter reinitStructureAnalyse(). **Exécuter**

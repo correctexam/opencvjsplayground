@@ -49,6 +49,7 @@ def interpretationQCM(nbReponses,nbEleves):
                 else :
                     infos_cases[k]=False
                     cases_vides.append(case)
+                img_rep_eleve = cv.putText(img_rep_eleve,str("%.5f" % (diff)),(getPosition(case)[0],getPosition(case)[1]-15),cv.FONT_HERSHEY_COMPLEX,1,(255,0,0),2)
             tab_analyse[j-1]=infos_cases
             img_rep_eleve = drawRectangle(img_rep_eleve,cases_remplies,(0,255,0))
             img_rep_eleve = drawRectangle(img_rep_eleve,cases_vides,(0,0,255))
