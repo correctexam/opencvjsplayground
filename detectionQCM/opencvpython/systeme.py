@@ -17,6 +17,9 @@ def pdf2png(pdf_input_path, png_output_path):
     for page in pages:
         page.save(png_output_path, 'PNG')
 
+def effaceFichier(chem_fichier :str):
+    if os.path.exists(chem_fichier):
+        os.remove(chem_fichier)
 
 def effaceFichiers(dir : str):
     for f in os.listdir(dir):
@@ -53,3 +56,7 @@ def effaceAnalyse(nomexam,nbEleves):
     for i in range(1,nbEleves+1):
         chemin = 'resource/'+nomexam+'/reponses_eleve_'+str(i)
         supprimeDossier(chemin)
+
+def ecrireFichier(chemin_fichier :str,contenu : str):
+    with open(chemin_fichier,'w') as f:
+        f.write(contenu)

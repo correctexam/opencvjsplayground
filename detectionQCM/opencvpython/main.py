@@ -1,4 +1,5 @@
-from systeme import effaceAnalyse, effaceFichiers, structureAnalyse
+import json
+from systeme import ecrireFichier, effaceAnalyse, effaceFichier, effaceFichiers, structureAnalyse
 from tools import *
 from calibration import NB_ELEVES, calibrer,detectionZones, reinitialisationCalibration
 
@@ -24,11 +25,12 @@ def main():
     # # Phase d'analyse
     #interpretationQCM(NB_QUESTIONS,NB_ELEVES)
     # # Suppression de tous les nouveaux dossiers et fichiers
-    #reinitStructureAnalyse()
+    #effaceAnalyse(EXAM_COURANT,NB_ELEVES)
 
 # Interprète les cases du QCM courant comme étant cochées ou vides
 def interpretationQCM(nbReponses,nbEleves):
     effaceFichiers('Temp') #Suppression des fichiers d'analyse déjà produits
+    tab_analyse = [[] for idel in range(nbEleves)]
     for i in range(1,nbReponses+1):
         chem_reponse = "resource/"+EXAM_COURANT+"/references/reponse_q"+str(i)+".png"
         cases_template,imgs_template = trouveCases(chem_reponse)
@@ -37,15 +39,27 @@ def interpretationQCM(nbReponses,nbEleves):
             img_rep_eleve = cv.imread(chem_reponse)
             img_rep_eleve = drawRectangle(img_rep_eleve,cases_template,(255,0,0))
             cases_remplies,cases_vides = [],[]
+            infos_cases = {}
             for k,case in enumerate(cases_template):
                 img_case_eleve = cv.cvtColor(decoupe(img_rep_eleve,getPosition(case),getDimensions(case)),cv.COLOR_BGR2GRAY)
                 diff =  diffCouleurAvecCaseBlanche(img_case_eleve,imgs_template[k]) 
-                if(diff>DIFFERENCES_AVEC_CASE_BLANCHE):cases_remplies.append(case)
-                else :cases_vides.append(case)
+                if(diff>DIFFERENCES_AVEC_CASE_BLANCHE):
+                    infos_cases[k]={"verdict" :True,"prediction" : diff}
+                    cases_remplies.append(case)
+                else :
+                    infos_cases[k]=False
+                    cases_vides.append(case)
+            tab_analyse[j-1]=infos_cases
             img_rep_eleve = drawRectangle(img_rep_eleve,cases_remplies,(0,255,0))
             img_rep_eleve = drawRectangle(img_rep_eleve,cases_vides,(0,0,255))
             cv.imwrite("Temp/detection_eleve_"+str(j)+"_q_"+str(i)+".png",img_rep_eleve)
-            
+    #Enregistrement du fichier d'analyse
+    dict_analyse = {"name_exam" : EXAM_COURANT,"results_exam" :[]}
+    for i,reps in enumerate(tab_analyse):
+        dict_analyse["results_exam"].append({"student_paper_id":str(i+1),"results_student" : reps})
+       
+    analyse_json = str(json.dumps(dict_analyse,indent=2))
+    ecrireFichier("Temp/analyse.json",analyse_json)
 
 
 if __name__ == '__main__':

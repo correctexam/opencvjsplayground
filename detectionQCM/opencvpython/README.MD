@@ -58,7 +58,7 @@ Suivre la procédure qui suit.
 1. Ouvrir le fichier *const.py*
 2. Modifier la variable **EXAM_COURANT** en la remplaçant par le **nom du dossier contenant l'examen**
 3. Modifier la variable **NB_QUESTIONS** en la remplaçant par le **nombre de questions** que l'examen contient
-4. Modifier la variable **NB_ELEVES** en la ramplaçant par le **nombre de copies** situées dans le dossier copies de l'examen courant
+4. Modifier la variable **NB_ELEVES** en la remplaçant par le **nombre de copies** situées dans le dossier copies de l'examen courant
 5. Ouvrir le fichier *main.py*, et sélectionner la fonction *main()*
 6. Commenter tous les appels de fonctions, sauf celui de *premiereFois()*. **Exécuter**
 7. Ouvrir l'image *Temp/info_zones.png*. Et repérer les coordonnées *(x_min,y_min)* des différentes zones de questions à analyser
