@@ -3,3 +3,6 @@ detectionQCM/opencvpython/resource/un_exam/copies/conversion_png/*
 detectionQCM/opencvpython/resource/un_exam/references/*
 detectionQCM/opencvpython/resource/un_exam/reponses_eleve_*
 detectionQCM/opencvpython/Temp/*
+detectionQCM/opencvpython/resource/version_scan/copies/conversion_png/*
+detectionQCM/opencvpython/resource/version_scan/references/*
+detectionQCM/opencvpython/resource/version_scan/reponses_eleve_*
