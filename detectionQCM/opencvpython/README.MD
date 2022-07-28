@@ -5,25 +5,17 @@ Sur l'image, le chiffre en bleu est l'analyse du taux de remplissage de la case.
 <img src="https://user-images.githubusercontent.com/62034725/181284736-6b8de2cf-a5ca-4355-82c7-30976568c851.png" alt="detection_eleve_q1" height="400" />
 <img src="https://user-images.githubusercontent.com/62034725/181285381-ffa3b0f4-60c3-4d0b-8193-f1e574b795fc.png" alt="detection_eleve_q2" height="400" />
 
-## Librairies à installer
-- Librairies dédiées à la découpe de l'examen en images calibrées
-  - ghostscript
-    
-        pip install ghostscript
+## Librairies utilisées
+Ce projet dépend de plusieurs librairies : 
+- ``pdf2image`` qui permet de convertir le pdf de chaque scan en image 
+- ``openCV`` pour mannipuler et appliquer différents traitements sur les images : lecture, enregistrement, repérage de formes, changement de format...
+- ``numpy`` pour ses tableaux et outils mathématiques
+- ``pyinterval`` pour facilement détecter si une forme est en intersection avec une autre
 
-  - pdf2image
+Celles-ci peuvent être directement installées avec la commande 
 
-        pip install pdf2image
+      pip install -r requirements.txt
 
-- Librairies nécessaires pour la détection des cases cochées dans une image
-  -  openCV
-  
-         pip install opencv-python
-
-
-  -  numpy
-  
-         pip install pyinterval
 
 ## Structure à adopter
 Des dossiers et fichiers vont y être ajoutés. Le résultat de l'analyse se trouvera dans un dossier Temp (à la racine du projet)  
