@@ -1,7 +1,7 @@
 import json
 from systeme import ecrireFichier, effaceAnalyse, effaceFichier, effaceFichiers, structureAnalyse
 from tools import *
-from calibration import NB_ELEVES, calibrer,detectionZones, reinitialisationCalibration
+from calibration import NB_ELEVES, calibrer,detectionZones, reCalibrage, reinitialisationCalibration
 
 def reinitStructureAnalyse():
     # Phase de création des dossiers nécessaires à l'analyse
@@ -21,9 +21,11 @@ def main():
     ## Les fonctions sont à commenter / décommenter suivant ce que l'avancement dans l'analyse
     premiereFois()
     # # Phase de calibration : les zones par question sont découpées dans le template et les copies d'élèves 
-    #calibrer(EXAM_COURANT)
+    calibrer(EXAM_COURANT)
+    # Si un décalage entre le template et les copies est observé, décommenter la fonction suivante 
+    reCalibrage()
     # # Phase d'analyse
-    #interpretationQCM(NB_QUESTIONS,NB_ELEVES)
+    interpretationQCM(NB_QUESTIONS,NB_ELEVES)
     # # Suppression de tous les nouveaux dossiers et fichiers
     #effaceAnalyse(EXAM_COURANT,NB_ELEVES)
 
@@ -33,7 +35,10 @@ def interpretationQCM(nbReponses,nbEleves):
     tab_analyse = [[] for idel in range(nbEleves)]
     for i in range(1,nbReponses+1):
         chem_reponse = "resource/"+EXAM_COURANT+"/references/reponse_q"+str(i)+".png"
+        # Récupération des cases détectées sur l'image du template de la question
         cases_template,imgs_template = trouveCases(chem_reponse)
+        img_analyse = drawRectangle(cv.imread(chem_reponse),cases_template,(255,0,0))
+        cv.imwrite("Temp/detection_template_q_"+str(i)+".png",img_analyse)
         for j in range(1,nbEleves+1):
             chem_reponse = "resource/"+EXAM_COURANT+"/reponses_eleve_"+str(j)+"/reponse_q"+str(i)+".png"
             img_rep_eleve = cv.imread(chem_reponse)
@@ -41,6 +46,8 @@ def interpretationQCM(nbReponses,nbEleves):
             cases_remplies,cases_vides = [],[]
             infos_cases = {}
             for k,case in enumerate(cases_template):
+                # Pour chaque (x,y) associé à une case du template, on récupère la zone située au même endroit sur la copie
+                # et on la compare avec celle du template
                 img_case_eleve = cv.cvtColor(decoupe(img_rep_eleve,getPosition(case),getDimensions(case)),cv.COLOR_BGR2GRAY)
                 diff =  diffCouleurAvecCaseBlanche(img_case_eleve,imgs_template[k]) 
                 if(diff>DIFFERENCES_AVEC_CASE_BLANCHE):

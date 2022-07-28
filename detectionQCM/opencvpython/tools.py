@@ -187,9 +187,9 @@ def couleurMedianeImage(img):
     return med
 
 def creationCarre(w,h,couleur=(0,0,0),alpha=0.4):
-    coul_img = np.ones((w,h,3), dtype=np.uint8)
-    cv.rectangle(coul_img, (0, 0), (h, w), (255,255,255), -1)
-    transp = cv.rectangle(coul_img.copy(), (0, 0), (h, w), couleur, -1)
+    coul_img = np.ones((h,w,3), dtype=np.uint8)
+    cv.rectangle(coul_img, (0, 0), (w, h), (255,255,255), -1)
+    transp = cv.rectangle(coul_img.copy(), (0, 0), (w, h), couleur, -1)
     coul_img = cv.addWeighted(transp,alpha,coul_img,1-alpha,0)
     return coul_img
 

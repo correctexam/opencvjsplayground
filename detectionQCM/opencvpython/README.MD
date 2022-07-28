@@ -31,18 +31,20 @@ OPENCVPYTHON
 └───resource
     │
     └───un_examen
-    │   │   un_examen.pdf
-    │   │   copie_1.pdf
-    │   │   copie_2.pdf
-    │   │   ...
-    │   │   copie_15.pdf
+    |   └───copies    
+    │       │   un_examen.pdf
+    │       │   copie_1.pdf
+    │       │   copie_2.pdf
+    │       │   ...
+    │       │   copie_15.pdf
     │
     └───un_autre_examen
-        │   un_autre_examen.pdf
-        │   copie_1.pdf
-        │   copie_2.pdf
-        │   ...
-        │   copie_25.pdf
+        └───copies
+            │   un_autre_examen.pdf
+            │   copie_1.pdf
+            │   copie_2.pdf
+            │   ...
+            │   copie_25.pdf
 ```
 
 # Exécuter le projet

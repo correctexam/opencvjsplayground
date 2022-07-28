@@ -1,7 +1,8 @@
+import numpy as np
 from systeme import *
 import cv2 as cv
-from tools import affiche, decoupe, getPosition,trouveCases 
-from const import NB_ELEVES,ZONES_COURANTES
+from tools import affiche, creationCarre, decoupe, getPosition,trouveCases
+from const import EXAM_COURANT, NB_ELEVES, NB_QUESTIONS,ZONES_COURANTES
 
 
 # Efface les fichiers produits pour la calibration
@@ -61,3 +62,64 @@ def detectionZones(nomexam):
         pos = getPosition(case)
         img = cv.putText(img,str(pos),pos,cv.FONT_HERSHEY_COMPLEX,2,(0,0,255),3)
     cv.imwrite('Temp/info_zones.png',img)
+
+# à partir des fichiers de réponse déjà découpés, 
+# recalibre chacun d'entre eux en se basant sur le template et les cases vides des réponses des élèves. Ne fonctionne que si le décalage entre le template et les cases vides est faible
+def reCalibrage():
+    chem_ref = "resource/"+EXAM_COURANT+"/references/"
+    chem_rep = "resource/"+EXAM_COURANT+"/reponses_eleve_"
+    for i in range(1,NB_QUESTIONS+1):
+        cases_template,imgs_template = trouveCases(chem_ref+"reponse_q"+str(i)+".png")
+        for j in range(1,NB_ELEVES+1):
+            chem_rep_eleve = chem_rep+str(j)+"/reponse_q"+str(i)+".png"
+            cases_vides_eleve,imgs_vides_eleve = trouveCases(chem_rep_eleve)
+            decalages = []
+            for case_eleve in cases_vides_eleve:
+                dists = [__dist(case_eleve,c) for c in cases_template]
+                case_template_associee = cases_template[dists.index(min(dists))]
+                x_t,y_t = getPosition(case_template_associee)
+                x_e,y_e = getPosition(case_eleve)
+                decalage = (x_e-x_t,y_e-y_t)
+                decalages.append(decalage)
+            decalage_moy = (__moy(decalages))
+            copie = decaleCopie(decalage_moy,chem_rep_eleve)
+            cv.imwrite(chem_rep_eleve,copie)
+
+def __dist(case1,case2):
+    p1 = np.array(getPosition(case1))
+    p2 = np.array(getPosition(case2))
+    return np.linalg.norm(p1-p2)
+def __moy(coordonnees):
+    x_sum = 0
+    y_sum = 0
+    for x,y in coordonnees:
+        x_sum+=x
+        y_sum+=y
+    n = len(coordonnees)
+    return (x_sum/n,y_sum/n)
+
+# Rajoute de la matière (du blanc) ou découpe une copie pour que la décaler en fonction du vecteur indiqué
+def decaleCopie(decalage,chem_copie):
+    copie = cv.imread(chem_copie)
+    h,w,_ = copie.shape
+    x,y = decalage
+    #decalage horizontal
+    if x<0: copie = __decoupePartie(copie,(int(x),int(h)),"DROITE") 
+    elif x>0: copie = __decoupePartie(copie,(int(x),int(h)),"GAUCHE") #copie = __ajouteRectangle(copie,(int(x),int(h)),"DROITE")
+    # #Mise à jour des dimensions
+    # h,w,_ = copie.shape
+    # #decalage vertical
+    if y<0:  copie = __decoupePartie(copie,(int(x+w),int(y)),"BAS")  # __ajouteRectangle(copie,(int(w+x),int(y)),"HAUT")
+    elif y>0:copie = __decoupePartie(copie,(int(x+w),int(y)),"HAUT")
+    return copie
+
+
+def __decoupePartie(img,dims,position="GAUCHE"):
+    wcrop,hcrop = dims
+    him,wim,_ = img.shape
+    if position=="GAUCHE" :img = img[0:him, wcrop:wim].copy()
+    elif position=="DROITE":img = img[0:him, 0:wim-wcrop].copy()
+    elif position=="HAUT":img = img[hcrop:him, 0:wim].copy()
+    elif position=="BAS":img = img[0:him-hcrop, 0:wim].copy()
+    return img
+
