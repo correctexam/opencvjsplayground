@@ -19,7 +19,7 @@ def premiereFois():
 
 def main():
     ## Les fonctions sont à commenter / décommenter suivant ce que l'avancement dans l'analyse
-    premiereFois()
+    #premiereFois()
     # # Phase de calibration : les zones par question sont découpées dans le template et les copies d'élèves 
     calibrer(EXAM_COURANT)
     # Si un décalage entre le template et les copies est observé, décommenter la fonction suivante 

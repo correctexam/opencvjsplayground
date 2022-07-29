@@ -8,7 +8,7 @@ Sur l'image, le chiffre en bleu est l'analyse du taux de remplissage de la case.
 ## Librairies utilisées
 Ce projet dépend de plusieurs librairies : 
 - ``pdf2image`` qui permet de convertir le pdf de chaque scan en image 
-- ``openCV`` pour mannipuler et appliquer différents traitements sur les images : lecture, enregistrement, repérage de formes, changement de format...
+- ``openCV`` pour manipuler et appliquer différents traitements sur les images : lecture, enregistrement, repérage de formes, changement de format...
 - ``numpy`` pour ses tableaux et outils mathématiques
 - ``pyinterval`` pour facilement détecter si une forme est en intersection avec une autre
 

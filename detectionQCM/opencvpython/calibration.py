@@ -65,7 +65,7 @@ def detectionZones(nomexam):
 
 # à partir des fichiers de réponse déjà découpés, 
 # recalibre chacun d'entre eux en se basant sur le template et les cases vides des réponses des élèves. Ne fonctionne que si le décalage entre le template et les cases vides est faible
-def reCalibrage():
+def reCalibrage(distMaximale = 25):
     chem_ref = "resource/"+EXAM_COURANT+"/references/"
     chem_rep = "resource/"+EXAM_COURANT+"/reponses_eleve_"
     for i in range(1,NB_QUESTIONS+1):
@@ -80,7 +80,7 @@ def reCalibrage():
                 x_t,y_t = getPosition(case_template_associee)
                 x_e,y_e = getPosition(case_eleve)
                 decalage = (x_e-x_t,y_e-y_t)
-                decalages.append(decalage)
+                if __dist(case_template_associee,case_eleve)<distMaximale : decalages.append(decalage)
             decalage_moy = (__moy(decalages))
             copie = decaleCopie(decalage_moy,chem_rep_eleve)
             cv.imwrite(chem_rep_eleve,copie)
