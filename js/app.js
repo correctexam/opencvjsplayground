@@ -1,4 +1,3 @@
-//import cv from "../node_modules/opencv-ts/src/opencv";
 const ACTION_APPLI = "QCM"//"INE"
 
 
@@ -51,12 +50,12 @@ function loadTags(sources,nbOutputs=7,nbCanvasOutputs=7,prefixeIdInput="canvasIn
 {
   function loadTagsQCM(){
     loadTags([
-      'detectionQCM/reponsesquestions/question1/reponse.png',
-      'detectionQCM/reponsesquestions/question2/reponse.png',
-      'detectionQCM/reponsesquestions/question3/reponse.png',
-      'detectionQCM/reponsesquestions/question4/reponse.png',
-      'detectionQCM/reponsesquestions/question5/reponse.png',
-      'detectionQCM/reponsesquestions/question6/reponse.png'
+      'detectionQCM/images/question1/reponse.png',
+      'detectionQCM/images/question2/reponse.png',
+      'detectionQCM/images/question3/reponse.png',
+      'detectionQCM/images/question4/reponse.png',
+      'detectionQCM/images/question5/reponse.png',
+      'detectionQCM/images/question6/reponse.png'
 
     ])
   }
