@@ -21,13 +21,13 @@ def main():
     ## Les fonctions sont à commenter / décommenter suivant ce que l'avancement dans l'analyse
     #premiereFois()
     # # Phase de calibration : les zones par question sont découpées dans le template et les copies d'élèves 
-    calibrer(EXAM_COURANT)
+    #calibrer(EXAM_COURANT)
     # Si un décalage entre le template et les copies est observé, décommenter la fonction suivante 
-    reCalibrage()
+    #reCalibrage()
     # # Phase d'analyse
-    interpretationQCM(NB_QUESTIONS,NB_ELEVES)
+    #interpretationQCM(NB_QUESTIONS,NB_ELEVES)
     # # Suppression de tous les nouveaux dossiers et fichiers
-    #effaceAnalyse(EXAM_COURANT,NB_ELEVES)
+    effaceAnalyse(EXAM_COURANT,NB_ELEVES)
 
 # Interprète les cases du QCM courant comme étant cochées ou vides
 def interpretationQCM(nbReponses,nbEleves):
