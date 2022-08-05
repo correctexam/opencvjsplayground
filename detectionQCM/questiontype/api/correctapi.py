@@ -55,7 +55,7 @@ async def renseigne_template(quest:QuestionTemplate):
         index = indextab[0]
         del questionsTemplate[index]
     questionsTemplate.append(quest) 
-    return {'question_loadded':quest in questionsTemplate ,'template_loadded':os.path.exists(PREFIXE+'template.pdf')}
+    return {'question_loadded':quest in questionsTemplate ,'template_loadded':os.path.exists(PREFIXE+'template-'+str(quest.examId)+'.pdf')}
 
 
 

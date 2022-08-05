@@ -6,3 +6,5 @@ detectionQCM/opencvpython/Temp/*
 detectionQCM/opencvpython/resource/version_scan/copies/conversion_png/*
 detectionQCM/opencvpython/resource/version_scan/references/*
 detectionQCM/opencvpython/resource/version_scan/reponses_eleve_*
+detectionQCM/questiontype/api/__pycache__/*
+detectionQCM/questiontype/api/upload/*
