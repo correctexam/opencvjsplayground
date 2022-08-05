@@ -55,8 +55,7 @@ async def renseigne_template(quest:QuestionTemplate):
         index = indextab[0]
         del questionsTemplate[index]
     questionsTemplate.append(quest) 
-    print(len(questionsTemplate))
-    return {'template_loadded':os.path.exists(PREFIXE+'template.pdf')}
+    return {'question_loadded':quest in questionsTemplate ,'template_loadded':os.path.exists(PREFIXE+'template.pdf')}
 
 
 
@@ -66,8 +65,8 @@ async def enregistreFichier(fichierclient : UploadFile, formats_acceptes :list[s
         async with aiofiles.open(chemin_fichier, 'wb') as fichierlocal:
             content = await fichierclient.read() 
             await fichierlocal.write(content)  
-        return {"Result": "Fichier déposé"}
-    else : return{"Result":"Mauvais format","Attendu":formats_acceptes}
+        return {"save": "success"}
+    else : return{"save":"fail","expected":formats_acceptes}
 
 
 # GESTION DES ERREURS CORS
