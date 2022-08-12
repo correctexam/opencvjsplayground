@@ -1,11 +1,68 @@
 {
-  "25": {
+  "5": {
     "question-details": {
-      "13": {
+      "1": {
         "students": {
-          "87": "une_autre_copie.png",
-          "12": "une_copie.png"
-        }
+          "99": [
+            "rep_stud_99_q_1.png"
+          ],
+          "103": [
+            "rep_stud_103_q_1.png"
+          ]
+        },
+        "template": "template_q_1.png"
+      }
+    }
+  },
+  "2": {
+    "question-details": {
+      "1": {
+        "students": {
+          "74": [
+            "rep_stud_74_q_1.png",
+            "rep_stud_74_q_1.png"
+          ],
+          "77": [
+            "rep_stud_77_q_1.png",
+            "rep_stud_77_q_1.png"
+          ],
+          "80": [
+            "rep_stud_80_q_1.png",
+            "rep_stud_80_q_1.png"
+          ],
+          "72": [
+            "rep_stud_72_q_1.png",
+            "rep_stud_72_q_1.png"
+          ],
+          "75": [
+            "rep_stud_75_q_1.png",
+            "rep_stud_75_q_1.png"
+          ],
+          "78": [
+            "rep_stud_78_q_1.png",
+            "rep_stud_78_q_1.png"
+          ],
+          "81": [
+            "rep_stud_81_q_1.png",
+            "rep_stud_81_q_1.png"
+          ],
+          "73": [
+            "rep_stud_73_q_1.png",
+            "rep_stud_73_q_1.png"
+          ],
+          "76": [
+            "rep_stud_76_q_1.png",
+            "rep_stud_76_q_1.png"
+          ],
+          "79": [
+            "rep_stud_79_q_1.png",
+            "rep_stud_79_q_1.png"
+          ]
+        },
+        "template": [
+          "template_q_1.png",
+          "template_q_1.png"
+        ]
       }
     }
   }

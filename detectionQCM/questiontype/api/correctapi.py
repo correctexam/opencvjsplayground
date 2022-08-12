@@ -1,5 +1,6 @@
 import json
 import os
+from re import template
 from sre_constants import SUCCESS
 import aiofiles
 from fastapi import FastAPI, UploadFile
@@ -21,6 +22,24 @@ class StudentRespName(BaseModel):
     studid:int
     source:str |list[str]
 
+class ExamSimple(BaseModel):
+    examid : int
+
+class TemplateSimple(BaseModel):
+    examid : int
+    numquest : int
+    templateName : str | list[str]
+
+class StudRespSimple(BaseModel):
+    examid : int
+    numquest:int
+    srn : StudentRespName
+
+class StudRespList(BaseModel):
+    examid : int
+    numquest:int
+    srns : list[StudentRespName]
+
 #---------ENDPOINTS TO GET INFORMATIONS ABOUT WHAT EXISTS IN THE BACKEND---------
 @questionapp.get('/status/exam/{examid}')
 async def status_exam(examid : int):
@@ -30,9 +49,14 @@ async def status_exam(examid : int):
 async def status_question(examid : int,questnum : int):
    return _statusQuestion(examid,questnum)
 
+@questionapp.get('/status/exam/{examid}/question/{questnum}/template-name/{templatename}')
+async def status_template_name(examid : int, questnum:int, templatename : str):
+    return _statusTemplateFilename(examid,questnum,templatename)
+
 @questionapp.post('/status/exam/{examid}/question/{questnum}/student-answser/')
 async def status_student_resp(examid : int, questnum:int, srn : StudentRespName):
     return _statusStudentResp(examid,questnum,srn)
+
 
 #--Tools
 def _statusExam(examid:int):
@@ -60,6 +84,18 @@ def _statusStudentResp(examid : int, questnum:int, srn : StudentRespName):
         srnExist = str(srn.studid) in studsInfo.keys() and studsInfo[str(srn.studid)]==srn.source
         return {'status':'success','examId':examid,'questnum':questnum,'student':srn.studid,'exists':srnExist}
 
+def _statusTemplateFilename(examid : int, questnum : id, templateName : str):
+    sq = (_statusQuestion(examid,questnum))
+    if(sq['status']!='success'):
+        return sq
+    elif not sq['exists']:
+        return {'status':'error','reason':'quest_unknown'}
+    else:
+        examinfos = loadExamInfos()
+        questInfo = examinfos[str(examid)]['question-details'][str(questnum)]
+        templateExists =  'template' in questInfo.keys() and questInfo['template']==templateName
+        return {'status':'success','examId':examid,'questnum':questnum,'template':templateName,'exists':templateExists}
+
 
 
 #----------ENDPOINTS TO DECLARE NEW EXAMS METADATA OR QUESTIONS METADATA. IF THEY ALREADY EXIST, THE OLD DATA IS CRUSHED
@@ -68,16 +104,28 @@ def _statusStudentResp(examid : int, questnum:int, srn : StudentRespName):
 
 #--EndPoints
 @questionapp.post('/create/exam')
-async def create_exam(examid : int):
-    return _newExam(examid)
+async def create_exam(dataExam : ExamSimple):
+    return _newExam(dataExam.examid)
 
 @questionapp.post('/create/question')
 async def create_question(examid : int,numquest:int):
   return _newQuestion(examid,numquest)
 
-@questionapp.post('/create/studrespname')
-async def create_student_response_name(examid : int, numquest:int,srn : StudentRespName):
-    return _newStudentSheetName(examid,numquest,srn)
+@questionapp.post('/create/studresp')
+async def create_student_response_name(dataStudResp : StudRespSimple):
+    return _newStudentSheetName(dataStudResp.examid,dataStudResp.numquest,dataStudResp.srn)
+
+@questionapp.post('/create/studresps')
+async def create_students_responses_names(dataStudResps : StudRespList):
+    resps = []
+    for srn in dataStudResps.srns:
+        resp =  _newStudentSheetName(dataStudResps.examid,dataStudResps.numquest,srn)
+        resps.append(resp)
+    return resps
+
+@questionapp.post('/create/template')
+async def create_template_filename(dataTemplate : TemplateSimple):
+    return _newTemplate(dataTemplate.examid,dataTemplate.numquest,dataTemplate.templateName)
 
 #--Tools
 def _newExam(examid:int):
@@ -102,8 +150,18 @@ def _newStudentSheetName(examid : int, numquest:int,srn : StudentRespName):
     examinfos = loadExamInfos()
     examinfos[str(examid)]['question-details'][str(numquest)]['students'][str(srn.studid)]=srn.source
     saveExamInfos(examinfos)
-    return 
+    return _statusStudentResp(examid,numquest,srn)
 
+def _newTemplate(examid : int,numquest:int,templateName : str | list[str]):
+    sq = _statusQuestion(examid,numquest)
+    if(sq['status']=='error' or not sq['exists']):
+        _newQuestion(examid,numquest)
+    examinfos = loadExamInfos()
+    if (isinstance(templateName,list) and len(templateName)==1):
+        templateName= templateName[0]
+    examinfos[str(examid)]['question-details'][str(numquest)]['template']=templateName
+    saveExamInfos(examinfos)
+    return _statusTemplateFilename(examid,numquest,templateName)
 
 
 #----------ENDPOINTS TO UPLOAD FILES. THEY MUST HAVE BEEN DECLARED BEFORE
