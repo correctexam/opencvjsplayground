@@ -1,11 +1,7 @@
 import json
-import os
-from re import template
-from sre_constants import SUCCESS
 import aiofiles
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from grip import export
 from pydantic import BaseModel
 import paths
 
@@ -16,6 +12,10 @@ questionapp = FastAPI()
 @questionapp.get('/')
 async def root():
     return {'message':'connected to CorrectAPI'}
+
+@questionapp.get('/favicon.ico')
+async def icon():
+    return 
 
 #---------DATA STRUCTURES for client
 class StudentRespName(BaseModel):
@@ -49,6 +49,10 @@ async def status_exam(examid : int):
 async def status_question(examid : int,questnum : int):
    return _statusQuestion(examid,questnum)
 
+@questionapp.get('/status/in-depth/exam/{examid}/question/{questnum}')
+async def status_in_depth_question(examid : int,questnum : int):
+    return _statusInDepthQuestion(examid,questnum)
+
 @questionapp.get('/status/exam/{examid}/question/{questnum}/template-name/{templatename}')
 async def status_template_name(examid : int, questnum:int, templatename : str):
     return _statusTemplateFilename(examid,questnum,templatename)
@@ -71,6 +75,19 @@ def _statusQuestion(examid : int, questnum : int):
     else:
         questnums = examinfos[str(examid)]['question-details'].keys()
         return {'status':'success','examId':examid,'questnum':questnum,'exists':str(questnum) in questnums}
+
+def _statusInDepthQuestion(examid : int, questnum : int):
+    sq = (_statusQuestion(examid,questnum))
+    if(sq['status']!='success'):
+        return sq
+    elif not sq['exists']:
+        return {'status':'error','reason':'quest_unknown'}
+    else :
+        details = loadExamInfos()[str(examid)]['question-details'][str(questnum)]
+        sq['details']= details
+        return sq
+
+    
 
 def _statusStudentResp(examid : int, questnum:int, srn : StudentRespName):
     sq = (_statusQuestion(examid,questnum))
@@ -166,6 +183,30 @@ def _newTemplate(examid : int,numquest:int,templateName : str | list[str]):
 
 #----------ENDPOINTS TO UPLOAD FILES. THEY MUST HAVE BEEN DECLARED BEFORE
 
+@questionapp.post('/upload/png')
+async def upload_template(clientfile:  UploadFile):
+        res = await saveFile(clientfile,["image/png"])
+        return res
+       
+@questionapp.post('/upload/pngs')
+async def upload_template(clientfiles:  list[UploadFile]):
+        names : list[str] = []
+        for file in clientfiles:
+           async with aiofiles.open(file.filename, 'wb') as out_file:
+            names.append(paths.EXAMPATH+file.filename)
+            while content := await file.read(1024):  
+                await out_file.write(content) 
+        return {"success": names==[paths.EXAMPATH+file.filename for file in clientfiles]}
+
+#---Tools
+async def saveFile(clientfile : UploadFile, accepted_formats :list[str]):
+    if clientfile.content_type in accepted_formats:
+        chemin_fichier = paths.EXAMPATH+clientfile.filename
+        async with aiofiles.open(chemin_fichier, 'wb') as localfile:
+            content = await clientfile.read() 
+            await localfile.write(content)  
+        return {"save": "success","filename" : localfile.name}
+    else : return{"save":"error","expected":accepted_formats}
 
 #---------- SAVING MANAGEMENT METHODS
 
