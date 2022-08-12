@@ -109,7 +109,7 @@ class Model {
 			// get the character at that index
 		let character = this.characters[argMax];
 		
-		console.log("Predicted", character, "Probability", probability)
+		// console.log("Predicted", character, "Probability", probability)
 		//console.timeEnd("Prediction")
 		return [character, probability]
 	}

@@ -1,0 +1,12 @@
+#Installation/Settup
+EXAM_COURANT="version_scan" #"un_exam" 
+NB_QUESTIONS=2
+NB_ELEVES = 3
+ZONES_COURANTES= [((285,2300),(800,600)),((285,2900),(800,800))] #[((350,2200),(800,650)),((350,2850),(800,800))]
+#Detection de formes
+MIN_WIDTH_SHAPE = 15
+MIN_HEIGHT_SHAPE = 15
+EPSILON = 0.0145 #0.03
+
+#Interprétation
+DIFFERENCES_AVEC_CASE_BLANCHE = 0.2

@@ -1,0 +1,4 @@
+pdf2image
+opencv-python
+numpy
+pyinterval
