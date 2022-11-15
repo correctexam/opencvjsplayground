@@ -1,18 +1,50 @@
 //import cv from "../node_modules/opencv-ts/src/opencv";
 
+//const { default: cv } = require("opencv-ts");
+
 function onRuntimeInitialized() {
   cv.then((e) => {
-    console.log('ok');
- /*   cv = e;
+  //  console.log('ok');
+    cv = e;
+ //   let src3 = cv.imread("canvasInput3");
+   /* srcEleve.push(src1);
+    srcEleve.push(src2);
+    srcEleve.push(src3);
+    
+    srcEleve.forEach((srcE,i) => {
+      let grayE = new cv.Mat();
+      cv.cvtColor(srcE, grayE, cv.COLOR_RGBA2GRAY, 0);
+      const casesvideseleves = trouveCases(grayE)
+      const decalage = computeDecallage(casesvideseleves,res)
+
+      const dstE = applyTranslation(srcE,decalage)
+      analyseStudentSheet(res,src,dstE)
+      cv.imshow("canvas_output"+(i+1), dstE);
+      grayE.delete();
+      srcE.delete();
+      if (dstE !== srcE){
+        dstE.delete();
+      }
+
+      casesvideseleves.cases.forEach(ca => ca.delete())
+      casesvideseleves.img_cases.forEach(ca => ca.delete())
+    })
+
+    src.delete();
+    gray.delete();
+    res.cases.forEach(ca => ca.delete())
+    res.img_cases.forEach(ca => ca.delete())
+*/
+    
     const m = new Model(true);
     m.isWarmedUp.then((e) => {
-      /*      cv.imshow("canvas_output", res.dst);
+    /*        cv.imshow("canvas_output", res.dst);
       cv.imshow("canvas_output1", res.letter[0][1]);
       cv.imshow("canvas_output2", res.pre_result);
       cv.imshow("canvas_output3", res.result);
       cv.imshow("canvas_output4", res.final);*/
       //cv.imshow(, res.invert_final);
-     /* let candidate = [];
+      let candidate = [];
       candidate.push("abcde");
       candidate.push("virginie");
       candidate.push("jacques");
@@ -24,7 +56,66 @@ function onRuntimeInitialized() {
       candidate.push("olivier");
       candidate.push("26011980");
 
-        for (let i = 0; i< 7; i++){
+      const  nomTemplate  =cv.imread("canvasInput0")
+      const  nomCopie  =cv.imread("canvasInput1")
+      let graynomTemplate = new cv.Mat();
+      cv.cvtColor(nomTemplate, graynomTemplate, cv.COLOR_RGBA2GRAY, 0);
+      let graynomCopie = new cv.Mat();
+      cv.cvtColor(nomCopie, graynomCopie, cv.COLOR_RGBA2GRAY, 0);
+
+      const casesTemplate = trouveCases(graynomTemplate)
+      drawRectangle(nomCopie,casesTemplate.cases, new cv.Scalar(0,255,0,128))
+      cv.imshow("canvas_output0", nomCopie);
+      console.error(casesTemplate.cases)
+
+      const letters = new Map();
+      for (let k = 0; k<casesTemplate.cases.length; k++) {
+      
+
+      const forme =casesTemplate.cases.sort(__comparePositionX)[k]
+     const dim = getDimensions(forme)
+     const pos = getPosition(forme)
+    // console.log(pos)
+      pos.x = pos.x
+      pos.y = pos.y
+      dim.w = dim.w 
+      dim.h = dim.h
+      
+
+      let dst2 = new cv.Mat();
+      let dst3 = new cv.Mat();
+      let dsize = new cv.Size(26, 26);
+      cv.resize( decoupe(graynomCopie,pos,dim), dst2, dsize, 0, 0, cv.INTER_AREA);
+      // let dsizeb = new cv.Size(28, 28);
+      // cv.resize(img, dst3, dsizeb, 0, 0, cv.INTER_AREA);
+      let s = new cv.Scalar(255, 0, 0, 255);
+      cv.copyMakeBorder(dst2, dst3, 1, 1, 1, 1, cv.BORDER_CONSTANT, s);
+      letters.set(pos, dst3);
+      dst2.delete();
+      }
+      console.log( [...letters].length)
+      const predict = [];
+      for (let i = 0; i < [...letters].length; i++) {
+        const s = diffGrayAvecCaseBlanche([...letters][i][1])
+        if (s>0.15){
+          let res1 = m.predict(imageDataFromMat([...letters][i][1]));
+          predict.push(res1);  
+        } else {
+          predict.push(['',1])
+        }
+
+      }
+      console.log(predict);
+
+      cv.imshow("canvas_output1",      dst3);
+
+
+
+//      const decalage = computeDecallage(casesvideseleves,res)
+
+//      const dstE = applyTranslation(srcE,decalage)
+
+/*        for (let i = 0; i< 3; i++){
             const  idinput  ="canvasInput"+i
             console.log(idinput)
       const res1 = fprediction(candidate,m, false, idinput, "canvas_output"+i); 
@@ -39,10 +130,11 @@ function onRuntimeInitialized() {
             paragraph.appendChild(text);      
         }
       
-    }
+    }*/
 
 
-    });*/
+    });
+
   });
 }
 function fprediction(cand, m,  lookingForMissingLetter, inputid,canevasId4Debug){
